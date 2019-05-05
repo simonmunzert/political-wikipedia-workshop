@@ -1,0 +1,51 @@
+PREFIX vrank:<http://purl.org/voc/vrank#>
+SELECT ?politician ?politician_label ?wikiurl ?gender ?datebirth ?datedeath ?placebirth ?party ?positions ?langeds ?pageRank WHERE {
+  ?politician wdt:P106 wd:Q82955. # query politicians
+  ?politician wdt:P27 wd:Q30. # country of citizenship: USA
+  ?politician rdfs:label ?politician_label. FILTER(LANG(?politician_label) = "en") . # politician label
+  #      
+  
+  # OPTIONAL{
+  #   SERVICE <http://dbpedia.org/sparql> {
+  #   ?politician vrank:hasRank/vrank:rankValue ?pageRank. # pageRank source: http://people.aifb.kit.edu/ath/
+  # } 
+  # }
+  
+  OPTIONAL{
+    ?wikiurl schema:about ?politician.
+    ?wikiurl schema:isPartOf <https://en.wikipedia.org/>. # provide en Wikipedia URL
+  }
+  
+  OPTIONAL{
+    ?politician wdt:P21 ?genderraw . # gender
+    ?genderraw rdfs:label ?gender FILTER (LANG(?gender) = "en") . # gender
+  }
+  
+  OPTIONAL{
+    ?politician wdt:P569 ?datebirth . # date of birth
+  }
+  
+  OPTIONAl{
+    ?politician wdt:P19 ?placebirthraw . 
+    ?placebirthraw rdfs:label ?placebirth FILTER (LANG(?placebirth) = "en") . # place of birth
+  }
+  
+  OPTIONAl{
+    ?politician wdt:P102 ?partyraw.
+    ?partyraw rdfs:label ?party. FILTER(LANG(?party) = "en") . # party 
+  }
+  
+  OPTIONAl{
+    ?politician wikibase:sitelinks ?langeds. # number of language editions on the Wikipedia
+  }
+  
+  #  OPTIONAl{
+  # ?politician wdt:P39 ?positionsraw .
+  # ?positionsraw rdfs:label ?positions. FILTER(LANG(?positions) = "en") . # positions  
+  #}
+  
+  OPTIONAL{
+    ?politician wdt:P570 ?datedeath . # date of death
+  }
+}
+LIMIT 50000

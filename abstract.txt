@@ -1,0 +1,4 @@
+Workshop "Studying politics on and with Wikipedia" Workshop abstract
+#####################
+
+The online encyclopedia Wikipedia, together with its sibling, the collaboratively edited knowledge base Wikidata, provide incredibly rich yet largely untapped sources for political research. In this hands-on workshop, I will show how these platforms can inform research on public attention dynamics, policies, political and other events, political elites, and parties, among other things. To that end, I will show how to use R and the packages WikipediR, WikidataR, pageviews, and wikipediatrend to connect with APIs from the Wikimedia foundation and efficiently access and parse content. Furthermore, I will provide an overview of the legislatoR package, a fully relational individual-level data package that comprises political, sociodemographic, and Wikipedia-related data on elected politicians across the globe. Please bring your laptops with a current version of R installed!

@@ -1,0 +1,4 @@
+\select@language {english}
+\beamer@sectionintoc {1}{Motivation}{2}{0}{1}
+\beamer@sectionintoc {2}{Content and Structure}{8}{0}{2}
+\beamer@sectionintoc {3}{Usage}{15}{0}{3}

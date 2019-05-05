@@ -1,0 +1,512 @@
+\input{slides-setup-metropolis.tex}
+\usepackage{fontawesome}
+\usepackage{enumitem}
+\usepackage{subfig}
+\setlist[itemize]{label=\textbullet}
+
+\newenvironment{myblock}[3]{%
+  \setbeamercolor{block body}{#2}
+  \setbeamercolor{block title}{#3}
+  \begin{block}{#1}}{\end{block}}
+  
+% emojis
+\newcommand{\emojiNo}{%
+  \begingroup\normalfont
+  \includegraphics[height=1.2\fontcharht\font`\B]{../figures/1F62B.pdf}%
+  \endgroup
+}
+
+\newcommand{\emojiYes}{%
+  \begingroup\normalfont
+  \includegraphics[height=1.2\fontcharht\font`\B]{../figures/1F603.pdf}%
+  \endgroup
+}
+
+
+\usefonttheme{serif}
+\usepackage{tikz}
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+            
+\title[The legislatoR package]{{\small MZES Social Science Data Lab \vspace{.5cm}\\ \huge \textbf{\texttt{legislatoR}} \vspace{.25cm} \\ \textbf{Political, sociodemographic, and Wikipedia-related data on political elites}}} 
+\author[G\"obel and Munzert]{Sascha G\"obel \hfill Simon Munzert  \\ University of Konstanz \hfill Hertie School of Governance} 
+\institute[\textsc{\textcolor{white}{G\"obel and Munzert}}]{}
+\date{\vspace{.5cm}\small May 6, 2019} 
+
+
+\makeindex
+
+%******************************************* 
+%******** BEGIN DOCUMENT *****
+%*******************************************
+\begin{document}
+\setbeamertemplate{caption}{\raggedright\insertcaption\par}
+\thispagestyle{empty}
+\frame{\titlepage} 
+
+
+\section{Motivation}
+\begin{frame}{Motivation}
+\begin{block}{Why a data package on political elites?}
+\begin{itemize}
+	\item \textbf{Continued demand} for individual-level data by researchers, students, analysts, and journalists  
+	\item \textbf{Status quo:} recurrent data collection with the same purpose is \textbf{inefficient and restricting}
+	\item \textbf{Existing data} structures \textbf{limited} in scope, hidden \textbf{behind paywalls}, or \textbf{difficult to access}
+\end{itemize}
+\pause
+\end{block}
+\begin{block}{Why use \& provide Wikipedia data?}
+\begin{itemize}
+	\item Contains archives full of \textbf{politicians' biographies}
+	\item Widely employed and primary \textbf{web information source}
+	\item Often deemed \textbf{neutral and trustworthy}
+\end{itemize}
+\end{block}
+\end{frame}
+
+
+\begin{frame}{Motivation}
+\begin{figure}[t]
+\begin{center}
+\vspace{-.1cm}
+	\includegraphics[scale=.33]{figure1.pdf}
+	\vspace{-.5cm}
+	\caption{Page views of German MPs’ Wikipedia entries.}
+	% MAYBE ADD USA HOUSE TRAFFIC
+\end{center}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Motivation}
+\begin{figure}[t]
+\begin{center}
+\vspace{-.1cm}
+	\includegraphics[scale=.53]{usah_time5.png}
+	\vspace{-.5cm}
+	\caption{Page views of US Representatives’ Wikipedia entries.}
+	% MAYBE ADD USA HOUSE TRAFFIC
+\end{center}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Motivation}
+\begin{columns}
+  \column{.65\textwidth}
+  \begin{block}{legislatoR}
+\begin{itemize}
+	\item Resource \textbf{efficient}: one stop shop for broad and deep data
+	\item Easily \textbf{accessible} from R with simple function calls
+	\item Facilitates data \textbf{integration} and \textbf{replication} efforts
+	\item It's \textbf{free}!
+\end{itemize}
+\end{block}     
+ \column{.3\textwidth}
+ \vspace{.2cm}
+\includegraphics[width=\textwidth]{logo.png}
+\end{columns}
+\end{frame}
+
+\section{Content and Structure}
+\begin{frame}{Content and data structure}
+\begin{block}{Content}
+\begin{itemize}
+	\item Currently \textbf{32,533 elected politicians}, all sessions of parliamentary chambers of Austria, Canada, the Czech Republic, France, Germany, Ireland, Scotland, UK, and the US (House and Senate)
+	\pause
+	\item \textbf{nine datasets} for each legislature:
+	\item[] \begin{itemize}
+			  \item[1.] \textit{Core} (basic sociodemographic data)
+			  \item[2.] \textit{Political} (basic political data)	  
+			  \item[3.] \textit{History} (full revision records of Wikipedia biographies)
+			  \item[4.] \textit{Traffic} (daily user traffic on Wikipedia biographies)
+			  \item[5.] \textit{Social} (social media handles and personal website URLs)
+			  \item[6.] \textit{Portrait} (URLs to Wikipedia portraits, facial recognition estimates)
+			  \item[7.] \textit{Office} (public offices)
+			  \item[8.] \textit{Profession} (professions)
+			  \item[9.] \textit{IDs} (identifiers linking to another file, database, or website)
+		\end{itemize}
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Content and data structure}
+\begin{figure}[t]
+\begin{center}
+\vspace{-.3cm}
+	\includegraphics[height=.85\textheight]{data-structure.png}
+\end{center}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Content and data structure}
+\begin{block}{Structure}
+\begin{itemize}
+	\item \textbf{relational} Individual-level data -- all datasets joinable with \textit{Core} dataset via two keys  (Wikipedia page or Wikidata ID)
+\end{itemize}
+\end{block}
+\pause
+\begin{block}{Sources}
+\begin{itemize}
+	\item \textbf{Automated} data extraction (XPath, Web APIs)
+	\item Face++ Cognitive Services API, Wikimedia Commons, Wikidata API, Wikipedia, Wikipedia API
+\end{itemize}
+\end{block}
+\pause
+\begin{block}{Issues}
+\begin{itemize}
+	\item Dependence on data coverage of sources, collaborative effort (but that's a feature, not a bug!)
+	\item In part substantial amount of missings
+\end{itemize}
+\end{block}
+\end{frame}
+
+\section{Usage}
+
+
+\begin{frame}{Usage}
+\begin{block}{Installation}
+\scriptsize{\texttt{> \# install from GitHub}} \\
+\scriptsize{\texttt{> devtools::install\char`_github("saschagobel/legislatoR")}} \\
+\scriptsize{\texttt{> \# load and attach}} \\
+\scriptsize{\texttt{> library(legislatoR)}}
+\end{block}
+\vspace{1cm}
+\pause
+\Large \centering For up-to-date information, check out \\ \url{https://github.com/saschagobel/legislatoR}
+\end{frame}
+
+\iffalse
+\begin{frame}{Usage}
+\begin{block}{Installation (not on CRAN yet!)}
+\scriptsize{\texttt{> \# install from GitHub}} \\
+\scriptsize{\texttt{> devtools::install\char`_github("saschagobel/legislatoR")}} \\
+\scriptsize{\texttt{> \# load and attach}} \\
+\scriptsize{\texttt{> library(legislatoR)}}
+\end{block}
+\pause
+\begin{block}{Get data}
+\begin{itemize}
+\item \texttt{get\char`_\{dataset\}()} fetches data from repository
+\item function takes one argument: \texttt{legislature}
+\item legislature codes: \texttt{austria}, \texttt{france}, \texttt{germany}, \texttt{ireland}, \texttt{usah}, \texttt{usas} 
+\end{itemize}
+\scriptsize{\texttt{> \# assign Core dataset for US House of Representatives into environment}} \\
+\scriptsize{\texttt{> congressmen <- get\char`_core(legislature = "usah")}}
+\end{block}
+\end{frame}
+
+\begin{frame}{Usage}
+\begin{block}{Join and subset data}
+\begin{itemize}
+\item data can be joined and subsetted while being fetched
+\item memory only allocated by parts assigned into environment
+\end{itemize}
+\scriptsize{\texttt{> \# assign Core dataset for US House of Representatives from 115th}}\\ 
+\scriptsize{\texttt{> \# session into environment}} \\
+\scriptsize{\texttt{> congressmen115 <- semi\char`_join(x = get\char`_core(legislature = "usah"),}}\\
+\scriptsize{\texttt{\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace y = filter(get\char`_political(legislature =}} \\
+\scriptsize{\texttt{\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace "usah"), session == 115),}}\\
+\scriptsize{\texttt{\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace by = "pageid")}}\\
+\scriptsize{\texttt{> \# append Wikipedia revision to congressmen115}}\\ 
+\scriptsize{\texttt{> congressmen115h <- left\char`_join(x = congressmen115,}}\\
+\scriptsize{\texttt{\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace y = get\char`_history(legislature = "usah"),}}\\ 
+\scriptsize{\texttt{\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace\enspace by = "pageid")}}
+\end{block}
+\pause
+\begin{block}{Get help}
+\scriptsize{\texttt{> \# call legislatoR help file for an overview of function calls}}\\
+\scriptsize{\texttt{> ?legislatoR}}\\
+\scriptsize{\texttt{> \# call help file for 'History' dataset}}\\
+\scriptsize{\texttt{> ?get\char`_history}}\\
+\end{block}
+\end{frame}
+
+\section{Use Cases}
+\begin{frame}{Use Cases (1)}
+\begin{itemize}
+\item Political advertising on the Wikipedia marketplace of information (Göbel and Munzert Forthcoming)
+\end{itemize}
+\begin{block}{Existing research}
+\begin{itemize}
+	\item capitalizes on free accessibility and editability
+	\item political content negotiated	(Neff et al. 2013)
+	\item politically biased editing (Kalla and Aronow 2015)
+\end{itemize}
+\end{block}
+\pause
+\begin{block}{Research question and contribution}
+\begin{itemize}
+	\item \textbf{if}, \textbf{how}, and \textbf{why} politicians take part in political interaction on Wikipedia?
+	\item study elite behavioral patterns via Wikipedia
+	\item role of the platform for professionalization of campaigning
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Use Cases (1)}
+$\bullet$ Wikipedia biographies constitute highly efficient tool for electoral campaigning and political marketing
+\begin{table}[h]
+  \centering
+  \small
+    \begin{tabularx}{\linewidth}{XXX}
+    \hline
+    connect & sway & control  \\
+    \hline
+    increase online & advertise, claim & shape information, \\
+    visibility, target & credit, take & bypass \\ 
+    voters & position & media/party filter, \\
+    & & remain undetected \\
+    \hline
+    \end{tabularx}
+%
+\end{table}
+\pause
+\begin{block}{Expectations}
+Usage and scope differ by incentive to cultivate a personal vote, temporal context, age, party affiliation, popularity, geographical location
+%
+\end{block}
+\end{frame}
+
+
+
+\begin{frame}{Use Cases (1)}
+\begin{block}{Empirical strategy}
+\begin{itemize}
+	\item explore edit histories of Wikipedia biographies
+%
+	\item trace edits originating from parliament's IP range
+%
+	\item explain edit patterns with strategic incentives and sociodemographics
+\end{itemize}
+\end{block}
+\pause
+\begin{block}{Data}
+\begin{itemize}
+	\item outcome: count of edits per biography
+%
+	\item predictors: political and sociodemographic MP characteristics and page metrics
+%
+	\item source: scraping of Wikipedia and MPs' Bundestag page HTMLs using XPath and regexp
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Use Cases (1)}
+\begin{block}{Case}
+\begin{itemize}
+	\item German MPs; 2005-2015; 1,100 MPs; 108,775 edits
+% 
+	\item third largest Wikipedia, second largest number of edits
+% 
+	\item exploit mixed electoral system (district vs. list candidates)
+% 
+\end{itemize}
+\end{block}
+\pause
+\begin{block}{Limitations}
+\begin{itemize}
+	\item edits cannot be linked to MPs directly
+% 
+	\item MPs `true' editing activity possibly underreported
+% 
+	\item actual purpose of edits not revealed by aggregate data
+% 
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Use Cases (1)}
+\begin{block}{Results}
+\begin{itemize}
+	\item \textbf{substantive public interest} in MPs' Wikipedia entries
+	\item qualitative \textbf{evidence} for various kinds \textbf{of marketing}
+	\item \textbf{51 percent} of the sampled \textbf{MP}s exhibit \textbf{edits} from the parliament's IP range
+	\item \textbf{2.2 percent} (\textbf{$\approx$ 2400}) \textbf{of all edits} can be traced back to the German Bundestag
+	\item \textbf{no increase}d activity visible \textbf{before elections}
+	\item predictors highlight \textbf{strategic incentives}
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Use Cases (1)}
+\vspace{0.2cm}
+Typology of edits from parliament's IT network
+\vspace{-0.2cm}
+\small
+\begin{table}
+\begin{tabularx}{\linewidth}{lXX}
+  \toprule
+& category & example  \\ 
+ \midrule
+1. & non-substantial edits & correction of tense or typos \\
+2. & private information sharing & information about childhood or housing shared \\
+3. & CV shaping & information about life and career added/removed    \\
+4. & provision of campaign information  & weblink to campaign page added \\
+5. & highlighting of successes  & statements of electoral successes in comparison with competitors \\
+6. & positive reframing  & `failures' framed as achievements \\
+7. & removal of adverse information  & information about memberships or past life removed \\
+  \bottomrule
+\end{tabularx}
+\end{table}
+\end{frame}
+
+\begin{frame}{Use Cases (1)}
+\begin{figure}[t]
+\begin{center}
+\vspace{-.1cm}
+	\includegraphics[scale=.36]{figure3.pdf}
+	\vspace{-1.4cm}
+	\caption{Edits on MPs' Wikipedia biographies over time.}
+\end{center}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Use Cases (1)}
+\vspace{0cm}
+Estimates of factors driving edits from parliament's IP range
+\vspace{-0.1cm}
+\begin{figure}[t]
+\begin{center}
+	\includegraphics[scale=.75]{figure6.jpg}
+		\vspace{-0.3cm}
+	\caption{\tiny{Note: Based on ZINB models holding other predictors at observed values.}}
+\end{center}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Use Cases (1)}
+\begin{itemize}
+\item 18th German Bundestag (continued)
+\end{itemize}
+\begin{figure}[t]
+\begin{center}
+\vspace{-.1cm}
+	\includegraphics[scale=.63]{uc_1_germany_time.png}
+	\vspace{-.5cm}
+\end{center}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Use Cases (2)}
+\begin{itemize}
+\item 114th US House of Representatives
+\end{itemize}
+\begin{figure}[t]
+\begin{center}
+\vspace{-.1cm}
+	\includegraphics[scale=.55]{uc_2_usah_time1.png}
+	\vspace{-.5cm}
+\end{center}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Use Cases (2)}
+\begin{figure}[t]
+\begin{center}
+\vspace{-.1cm}
+	\includegraphics[scale=.55]{uc_2_usah_time2.png}
+	\vspace{-.5cm}
+\end{center}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Use Cases (3)}
+\begin{figure}[t]
+\begin{center}
+\vspace{-.1cm}
+\hspace*{-0.7cm}
+	\includegraphics[scale=.5]{uc_3_usah_et.png}
+\hspace*{0.5cm}
+	\includegraphics[scale=.5]{uc_3_usah_et2.png}
+	\vspace{-.5cm}
+\end{center}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Use Cases (4)}
+\begin{figure}[t]
+\begin{center}
+\vspace{-.1cm}
+	\includegraphics[scale=.63]{uc_4_usah_cont1.png}
+	\vspace{-.5cm}
+\end{center}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Use Cases (4)}
+\begin{figure}[t]
+\begin{center}
+\vspace{-.1cm}
+\hspace*{-0.95cm}
+	\includegraphics[scale=.38]{uc_4_usah_cont2.png}
+\hspace*{-0.1cm}
+	\includegraphics[scale=.38]{uc_4_usah_cont3.png}
+	\vspace{-.5cm}
+\end{center}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Use Cases (5)}
+\begin{figure}[t]
+\begin{center}
+\vspace{-.5cm}
+\hspace*{-0.8cm}
+	\includegraphics[scale=.17]{uc_5_map_edits1.png}
+\hspace*{-0.1cm}
+	\includegraphics[scale=.17]{uc_5_map_edits2.png}
+	\hspace*{-0.1cm}
+	\includegraphics[scale=.17]{uc_5_map_editsbefore.png}
+	\vspace{0cm} \\
+\hspace*{-0.8cm}
+	\includegraphics[scale=.17]{uc_5_map_editsanon1.png}
+\hspace*{-0.1cm}
+	\includegraphics[scale=.17]{uc_5_map_editsanon2.png}
+\hspace*{-0.1cm}
+	\includegraphics[scale=.17]{uc_5_map_editsanonbefore.png}
+\end{center}
+\end{figure}
+\begin{tikzpicture}[remember picture,overlay]
+\node at (5.3,7.75) {\small all edits};
+\node at (5.3,4) {\small ISP -- House};
+\end{tikzpicture}
+\end{frame}
+
+\begin{frame}{Use Cases (6)}
+\begin{figure}[t]
+\begin{center}
+\vspace{-.3cm}
+\hspace*{-0.5cm}
+	\includegraphics[scale=.33]{uc_5_wc_dels.png}
+\hspace*{0.4cm}
+	\includegraphics[scale=.33]{uc_5_wc_ins.png}
+	\vspace{-.5cm}
+\end{center}
+\end{figure}
+\begin{tikzpicture}[remember picture,overlay]
+\node at (5.3,0) {\small sentiment};
+\node at (2.3,0) {\small -0.4};
+\node at (8.3,0) {\small +1.3};
+\node at (2.3,6.5) {\small deletions};
+\node at (8.3,6.5) {\small insertions};
+\end{tikzpicture}
+\end{frame}
+\fi
+
+\iffalse
+\begin{frame}
+\vspace{2.5cm}
+\begin{center}
+\LARGE Thank you for your attention!
+\end{center}
+\vspace{1.5cm}
+\begin{flushright}
+Sascha Göbel \\
+\url{sascha.goebel@uni-konstanz.de} \\ 
+\smallskip
+Simon Munzert \\
+\url{munzert@hertie-school.org} \\
+\end{flushright}
+\end{frame}
+\fi
+
+\end{document}
