@@ -154,6 +154,14 @@ plot(cs_net, vertex.label = ifelse(V(cs_net)$name %in% cs_hc_labels_ss, V(cs_net
 
 
 
+## further exploration ---------------------------
+
+# choose a major election event that took place after November 2017
+# identify Wikipedia pages associated with that election
+# compare the popularity of these pages using the pageviews information
+# focusing on the most popular page, check out what the most popular follow-up articles were, i.e. the articles that people clicked on most often starting from the election page
+
+
 
 
 

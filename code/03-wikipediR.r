@@ -56,14 +56,10 @@ cats[[1]]$categories
 
 
 
-### example: build a network of politicians
-
-
-## case study 2: build a network of statisticians -------
+### example: build a network of German MPs -----------------
 
 ## goals
-
-# gather list of statisticians
+# gather list of German MPs
 # fetch Wikipedia entries
 # identify links
 # construct connectivity matrix
@@ -92,7 +88,7 @@ save(links_list, file = "../data/wikipediR/mdb_links_list.RData")
 load("../data/wikipediR/mdb_links_list.RData")
 }
 
-## step 3: identify links between statisticians
+## step 3: identify links between MPs
 # loop preparation
 connections <- data.frame(from=NULL, to=NULL)
 # loop
@@ -131,7 +127,7 @@ saveNetwork(network_out, file = '../data/connections.html')
 browseURL("../data/connections.html")
 
 
-## step 7: identify top nodes in data frame
+## step 5: identify top nodes in data frame
 nodesDF$id <- as.numeric(rownames(nodesDF)) - 1
 connections_df <- merge(connections, nodesDF, by.x = "to", by.y = "id", all = TRUE)
 to_count_df <- count(connections_df, name)
